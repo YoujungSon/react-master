@@ -18,16 +18,16 @@ const Header = styled.header`
 `;
 const CoinList = styled.ul``;
 const Coin = styled.li`
-  background-color: #fff;
-  color: ${(props) => props.theme.bgColor};
-  margin-bottom: 10px;
-  padding: 20px;
+  background-color: ${(props) => props.theme.cardBgColor};
+  color: ${(props) => props.theme.textColor};
   border-radius: 15px;
+  margin-bottom: 10px;
+  border: 1px solid white;
   a {
-    padding: 20px;
-    transition: color 0.2s ease-in;
     display: flex;
     align-items: center;
+    padding: 20px;
+    transition: color 0.2s ease-in;
   }
   &:hover {
     a {
