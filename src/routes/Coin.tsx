@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react";
-import {
-  Switch,
-  Route,
-  useLocation,
-  useParams,
-  useRouteMatch,
-} from "react-router";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import Chart from "./Chart";
-import Price from "./Price";
-import { useQuery } from "@tanstack/react-query";
-import { fetchCoinInfo, fetchCoinTickers } from "../api";
-import { Helmet } from "react-helmet";
+import { useEffect, useState } from 'react';
+import { Switch, Route, useLocation, useParams, useRouteMatch } from 'react-router';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Chart from './Chart';
+import Price from './Price';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCoinInfo, fetchCoinTickers } from '../api';
+import { Helmet } from 'react-helmet';
+import { useSetRecoilState } from 'recoil';
+import { isDarkAtom } from '../atoms';
 
 const Title = styled.h1`
   font-size: 48px;
@@ -73,8 +69,7 @@ const Tab = styled.span<{ isActive: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
   padding: 7px 0;
   border-radius: 10px;
-  color: ${(props) =>
-    props.isActive ? props.theme.accentColor : props.theme.textColor};
+  color: ${(props) => (props.isActive ? props.theme.bgColor : props.theme.textColor)};
   a {
     display: block;
   }
@@ -142,16 +137,13 @@ interface ICoinProps {}
 function Coin({}: ICoinProps) {
   const { coinId } = useParams<RouteParams>();
   const { state } = useLocation<RouteState>();
-  const priceMatch = useRouteMatch("/:coinId/price");
-  const chartMatch = useRouteMatch("/:coinId/chart");
-  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
-    ["info", coinId],
-    () => fetchCoinInfo(coinId),
-    { refetchInterval: 5000 }
-  );
-  const { isLoading: tickersLoading, data: tickerData } = useQuery<PriceData>(
-    ["tickers", coinId],
-    () => fetchCoinTickers(coinId)
+  const priceMatch = useRouteMatch('/:coinId/price');
+  const chartMatch = useRouteMatch('/:coinId/chart');
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(['info', coinId], () => fetchCoinInfo(coinId), {
+    refetchInterval: 5000,
+  });
+  const { isLoading: tickersLoading, data: tickerData } = useQuery<PriceData>(['tickers', coinId], () =>
+    fetchCoinTickers(coinId),
   );
   // const [loading, setLoading] = useState(true);
   // const [info, setInfo] = useState<InfoData>();
@@ -170,17 +162,19 @@ function Coin({}: ICoinProps) {
   //   })();
   // }, [coinId]);
   const loading = infoLoading || tickersLoading;
+
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => {
+    setDarkAtom((prev) => !prev);
+  };
   return (
     <Container>
       <Helmet>
-        <title>
-          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
-        </title>
+        <title>{state?.name ? state.name : loading ? 'Loading...' : infoData?.name}</title>
       </Helmet>
       <Header>
-        <Title>
-          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
-        </Title>
+        <Title>{state?.name ? state.name : loading ? 'Loading...' : infoData?.name}</Title>
+        <button onClick={toggleDarkAtom}>Toggle Mode</button>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
@@ -222,7 +216,7 @@ function Coin({}: ICoinProps) {
 
           <Switch>
             <Route path={`/:coinId/price`}>
-              <Price />
+              <Price coinId={coinId} />
             </Route>
             <Route path={`/:coinId/chart`}>
               <Chart coinId={coinId} />

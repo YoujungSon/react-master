@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { useQuery } from "@tanstack/react-query";
-import { fetchCoin } from "../api";
-import { Helmet } from "react-helmet";
-import { useSetRecoilState } from "recoil";
-import { isDarkAtom } from "./../atoms";
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCoin } from '../api';
+import { Helmet } from 'react-helmet';
+import { useSetRecoilState } from 'recoil';
+import { isDarkAtom } from './../atoms';
 
 const Container = styled.div`
   padding: 0 20px;
@@ -68,7 +68,7 @@ function Coins() {
   const toggleDarkAtom = () => {
     setDarkAtom((prev) => !prev);
   };
-  const { isLoading, data } = useQuery<Icoin[]>(["allCoins"], fetchCoin);
+  const { isLoading, data } = useQuery<Icoin[]>(['allCoins'], fetchCoin);
   // const [coins, setCoins] = useState<CoinInterface[]>([]);
   // const [loading, setLoading] = useState(true);
   // useEffect(() => {
@@ -101,9 +101,7 @@ function Coins() {
                   state: { name: coin.name },
                 }}
               >
-                <Img
-                  src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
-                />
+                <Img src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`} />
                 {coin.name} &rarr;
               </Link>
             </Coin>
